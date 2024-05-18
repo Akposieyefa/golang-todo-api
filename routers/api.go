@@ -2,6 +2,7 @@ package routers
 
 import (
 	"akposieyefa/golang-todo-api/handlers"
+	"akposieyefa/golang-todo-api/middleware"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 
 func Router() {
 	router := mux.NewRouter()
+	router.Use(middleware.Middleware)
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -27,6 +29,9 @@ func Router() {
 	router.HandleFunc("/todos/{id}", handlers.GetSingelTodo).Methods("GET")
 	router.HandleFunc("/todos/{id}", handlers.UpdateTodo).Methods("UPDATE")
 	router.HandleFunc("/todos/{id}", handlers.DeleteTodo).Methods("DELETE")
+	router.HandleFunc("/auth/register", handlers.CreateUserAccount).Methods("POST")
+	router.HandleFunc("/auth/login", handlers.LoginHandler).Methods("POST")
+	router.HandleFunc("/auth/user", handlers.GetUserProfile).Methods("GET")
 
 	s := &http.Server{
 		Addr:           ":8080",
